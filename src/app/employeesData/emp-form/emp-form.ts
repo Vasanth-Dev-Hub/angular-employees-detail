@@ -56,6 +56,10 @@ export class EmpForm implements OnInit, OnChanges {
   }
 
   closeModal(formSave: boolean) {
+    if(!!formSave){
+      const closeButton: any = document.getElementById("closeEmpFormModal")
+      closeButton.click();
+    }
     this.employeeFormSubmit.emit(formSave);
     this.employeeForm.reset();
     this.employeeForm.get('status')?.setValue('true');
@@ -69,8 +73,6 @@ export class EmpForm implements OnInit, OnChanges {
       })
     ).subscribe((res) => {
       this.service.showSuccess('Employee added successfully');
-      const closeButton: any = document.getElementById("closeEmpFormModal")
-      closeButton.click();
       this.closeModal(true);
     }, (error) => {
       this.service.showError('unable to add employee');
@@ -85,8 +87,6 @@ export class EmpForm implements OnInit, OnChanges {
       })
     ).subscribe((res) => {
       this.service.showSuccess('Employee updated successfully');
-      const closeButton: any = document.getElementById("closeEmpFormModal")
-      closeButton.click();
       this.closeModal(true);
     }, (error) => {
       this.service.showError('unable to update employee');
