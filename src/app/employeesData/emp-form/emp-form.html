@@ -1,0 +1,95 @@
+<div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="employeeFormModalLabel" *ngIf="!!action">{{action == "EDIT" ? "Edit Employee Details" : action == "VIEW" ? "View Employee Details" : "Add Employee Details"}}</h5>
+            <button type="button" id="closeEmpFormModal" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                (click)="closeModal(false)"></button>
+        </div>
+        <div class="modal-body">
+            <form [formGroup]="employeeForm">
+                <div class="row mb-3">
+                    <label for="name" class="col-sm-2 col-form-label">Name <span class="text-danger">*</span></label>
+                    <div class="col-sm-10">
+                        <input type="text"
+                            [class.is-invalid]="employeeForm.get('name')?.touched && employeeForm.get('name')?.invalid && employeeForm.get('name')?.errors?.['required']"
+                            [attr.disabled]="action === 'VIEW' ? true : null" class="form-control" id="name"
+                            placeholder="Enter the name" formControlName="name">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label for="email" class="col-sm-2 col-form-label">Email <span class="text-danger">*</span></label>
+                    <div class="col-sm-10">
+                        <input type="email"
+                            [class.is-invalid]="employeeForm.get('email')?.touched && employeeForm.get('email')?.invalid && (employeeForm.get('email')?.errors?.['required'] || employeeForm.get('email')?.errors?.['email'] || employeeForm.get('email')?.errors?.['pattern'])"
+                            [attr.disabled]="action === 'VIEW' ? true : null" class="form-control" id="email"
+                            placeholder="Enter the email" formControlName="email">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label for="Department" class="col-sm-2 col-form-label">Department <span
+                            class="text-danger">*</span></label>
+                    <div class="col-sm-10">
+                        <select class="form-select"
+                            [class.is-invalid]="employeeForm.get('department')?.touched && employeeForm.get('department')?.invalid && employeeForm.get('department')?.errors?.['required']"
+                            [attr.disabled]="action === 'VIEW' ? true : null" id="Department"
+                            formControlName="department">
+                            <option selected disabled value="null">Select Department</option>
+                            <option *ngFor="let data of departmentList" [value]="data?.departmentName">
+                                {{data?.departmentName}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label for="contact" class="col-sm-2 col-form-label">Contact</label>
+                    <div class="col-sm-10">
+                        <input type="text"
+                            [class.is-invalid]="employeeForm.get('contact')?.touched && employeeForm.get('contact')?.invalid"
+                            [attr.disabled]="action === 'VIEW' ? true : null" class="form-control" id="contact"
+                            placeholder="Enter the contact number" formControlName="contact">
+                        <div *ngIf="employeeForm.get('contact')?.touched && employeeForm.get('contact')?.invalid"
+                            class="text-danger">
+                            <div *ngIf="employeeForm.get('contact')?.errors?.['minlength']">Minimum 10 digits required.
+                            </div>
+                            <div *ngIf="employeeForm.get('contact')?.errors?.['maxlength']">Maximum 15 digits allowed.
+                            </div>
+                            <div *ngIf="employeeForm.get('contact')?.errors?.['pattern']">Only numeric characters
+                                allowed.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label for="status" class="col-sm-2 col-form-label">Status</label>
+                    <div class="col-sm-10">
+                        <select class="form-select" [attr.disabled]="action === 'VIEW' ? true : null" id="status"
+                            formControlName="status">
+                            <option [value]="'true'">Active</option>
+                            <option [value]="'false'">Inactive</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mb-3" formGroupName="address">
+                    <label for="address" class="col-sm-2 col-form-label">Address</label>
+                    <div class="col-sm-10">
+                        <input type="text" [attr.disabled]="action === 'VIEW' ? true : null" class="form-control"
+                            id="address" placeholder="Enter the street" formControlName="street">
+                        <input type="text" [attr.disabled]="action === 'VIEW' ? true : null" class="my-2 form-control"
+                            id="address" placeholder="Enter the city" formControlName="city">
+                        <input type="number" [attr.disabled]="action === 'VIEW' ? true : null" class="form-control"
+                            id="address" placeholder="Enter the pincode" formControlName="pincode">
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer" *ngIf="action != 'VIEW'">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                (click)="closeModal(false)">Close</button>
+            <button type="button" class="btn btn-primary" [disabled]="employeeForm.invalid || isLoading"
+                (click)="action === 'ADD' ? addEmpDetails() : updateEmpDetails()">
+                <span *ngIf="!isLoading">Submit</span>
+                <span *ngIf="isLoading" class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                <span class="visually-hidden">Loading...</span>
+            </button>
+        </div>
+    </div>
+</div>
